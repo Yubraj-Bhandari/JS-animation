@@ -1,0 +1,119 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOM Square Movement</title>
+    <style>
+        #container {
+            width: 400px;
+            height: 400px;
+            background: #998898;
+            border: 4px solid slateblue;
+            border-radius: 10px;
+            position: relative;
+        }
+        #inside {
+            height: 50px;
+            width: 50px;
+            background: #FECEAB;
+            border: 2px solid #ed8135;
+            position: absolute;
+        }
+    </style>
+</head>
+<body>
+
+<div id="container">
+    <div id="inside"></div>
+</div>
+<p>
+    <button onclick="myMove()">Click</button>
+</p>
+
+<script>
+function myMove() {
+    const element = document.getElementById("inside");
+    let posX = 0;  // Initial X position
+    let posY = 0;  // Initial Y position
+    const step = 2;  // Step size for movement
+    const maxPos = 350;  // Max position to move (size of container minus size of element)
+
+    let side = 1;  // Start moving along the top edge (side 1)
+    const id = setInterval(frame, 10);  // Move every 10ms
+
+    function frame() {
+        // Move right (side 1: top-left to top-right)
+        if (side === 1) {
+            if (posX < maxPos) {
+                posX += step;
+                element.style.left = posX + 'px';
+            } else {
+                side = 2;  // Move to the next side when top-right is reached
+            }
+        }
+
+        // Move down (side 2: top-right to bottom-right)
+        else if (side === 2) {
+            if (posY < maxPos) {
+                posY += step;
+                element.style.top = posY + 'px';
+            } else {
+                side = 3;  // Move to the next side when bottom-right is reached
+            }
+        }
+
+        // Move left (side 3: bottom-right to bottom-left)
+        else if (side === 3) {
+            if (posX > 0) {
+                posX -= step;
+                element.style.left = posX + 'px';
+            } else {
+                side = 4;  // Move to the next side when bottom-left is reached
+            }
+        }
+
+        // Move up (side 4: bottom-left to top-left)
+        else if (side === 4) {
+            if (posY > 0) {
+                posY -= step;
+                element.style.top = posY + 'px';
+            } else {
+                clearInterval(id);  // Stop when back at top-left corner
+            }
+        }
+    }
+}
+</script>
+
+</body>
+</html>
+
+
+<!-- Explanation:
+Initial Variables:
+
+posX and posY start at 0, representing the initial top-left corner.
+step is the number of pixels moved per frame (adjust this to control speed).
+maxPos is set to 350, which is the farthest the element can move (the container is 400x400px, and the element is 50x50px, so 400 - 50 = 350).
+Movement Logic:
+
+Side 1 (Move Right): The element moves along the top edge (increasing posX).
+Side 2 (Move Down): The element moves down along the right edge (increasing posY).
+Side 3 (Move Left): The element moves left along the bottom edge (decreasing posX).
+Side 4 (Move Up): The element moves up along the left edge (decreasing posY).
+setInterval():
+
+Every 10ms, the frame() function is called to update the position of the #inside element along one of the sides.
+Once the element completes each side of the square, the side variable changes to indicate movement to the next side.
+Stopping Condition:
+
+Once the element reaches back to the top-left corner (when both posX and posY are 0 again), the clearInterval(id) stops the movement.
+How It Works:
+The element starts at the top-left corner (posX = 0, posY = 0).
+It moves to the top-right corner (posX = 350, posY = 0).
+Then it moves to the bottom-right corner (posX = 350, posY = 350).
+Next, it moves to the bottom-left corner (posX = 0, posY = 350).
+Finally, it moves back to the top-left corner (posX = 0, posY = 0) and stops. -->
